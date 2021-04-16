@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:location/location.dart';
 
 // final prefs = await SharedPreferences.getInstance();
 
@@ -20,6 +21,7 @@ enum EmotionalState {
 @JsonSerializable()
 class Cue {
   DateTime date;
+  TimeOfDay time = TimeOfDay.now();
   String place;
   EmotionalState emotionalState;
   String activity;
@@ -36,9 +38,13 @@ class Cue {
 }
 
 class CueForm extends StatefulWidget {
+
+  String cueName;
+  CueForm(this.cueName);
+
   @override
   CueFormState createState() {
-    return CueFormState();
+    return CueFormState(cueName);
   }
 }
 
@@ -55,6 +61,11 @@ class CueFormState extends State<CueForm> {
   final _isFilled_EmotionalState = TextEditingController();
   final _isFilled_Activity = TextEditingController();
   final _isFilled_People = TextEditingController();
+
+  Cue currentCue = new Cue();
+
+  String cueName;
+  CueFormState(this.cueName);
 
   checkTextFieldEmptyOrNot(){
     // Creating 3 String Variables.
@@ -96,6 +107,10 @@ class CueFormState extends State<CueForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              Center(
+                child: Text(cueName, style: TextStyle(fontSize: 25),)
+              ),
+
               //* Time
               Card(
                 color: Colors.white70,
@@ -107,8 +122,26 @@ class CueFormState extends State<CueForm> {
                         children: <Widget>[
                           Expanded(child: Text("Time",)),
                           Expanded(
-                            child: TextField(
-                              controller: _isFilled_Time,
+                            child: TextButton(
+                              onPressed: () {
+                                Future<void> _selectDate(BuildContext context) async {
+                                  final TimeOfDay pickedDate = await showTimePicker(
+                                      context: context,
+                                      initialTime: TimeOfDay.now()
+                                  );
+                                  if (pickedDate != null) {
+                                    setState(() {
+                                      currentCue.time = pickedDate;
+                                    });
+                                  }
+                                  // if (pickedDate != null && pickedDate != currentDate)
+                                  //   setState(() {
+                                  //     currentDate = pickedDate;
+                                  //   });
+                                }
+                                _selectDate(context);
+                              },
+                              child: Text(currentCue.time.format(context),),
                             ),
                           ),
                         ],
