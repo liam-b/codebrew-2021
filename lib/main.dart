@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import 'cue_form.dart';
 
@@ -12,7 +13,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Pi in Disguise',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: Colors.white,
+        primarySwatch: Colors.grey
       ),
       home: MyHomePage(title: 'Pie In Disguise'),
     );
@@ -37,18 +39,37 @@ class HabitButton extends StatelessWidget {
     // Build a Form widget using the _formKey created above.
     return Padding(
       padding: EdgeInsets.all(5),
-      child: ElevatedButton(
-        onPressed: () {
-            // Respond to button press
-        },
-        child: Text(habitName, style: TextStyle(fontSize: 25)),
+      child: SizedBox(
+        width: double.infinity,
+        child: ElevatedButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(Colors.white70),
+            foregroundColor: MaterialStateProperty.all(Colors.black54),
+          ),
+          onPressed: () => {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) {
+              return CueForm(habitName);
+              }),
+            )
+          },
+          child: Padding(
+            padding: EdgeInsets.all(5),
+            child: Text(habitName, style: TextStyle(fontSize: 25)),
+          )
+        )
       )
+      
     );
   }
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+
+  final habits = ['Smoking', 'Coffee', 'Diareha'];
+
 
   void _incrementCounter() {
     setState(() {
@@ -63,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
         padding: EdgeInsets.all(30),
         child: Center(
           child: Column(
-            children: <Widget>[
+            children: [
               // ElevatedButton(
               //   onPressed: () {
               //       // Respond to button press
@@ -71,45 +92,39 @@ class _MyHomePageState extends State<MyHomePage> {
               //   child: Text("I FEEL LIKE SMOKING", style: TextStyle(fontSize: 25)),
               // ),
               // SizedBox(height: 10),
-              HabitButton("Smoking"),
-              HabitButton("Coffee"),
-              HabitButton("Coffee"),
-              HabitButton("Coffee"),
-              HabitButton("Coffee"),
-              HabitButton("Coffee"),
-              HabitButton("Coffee")
+              for ( var i in habits) HabitButton(i.toString())
             ],
           )
         ),
       ),
-      floatingActionButton: Container(
-        // child: Icon(Icons.airline_seat_individual_suite_sharp),
-          width: 70.0,
-          height: 70.0,
-        child: FloatingActionButton(
-          tooltip: 'Increment',
-          shape: new CircleBorder(),
-          elevation: 0.0,
-          child: Icon(
-            Icons.add,
-            color: Colors.blue,
-          ),
-          onPressed: () => {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) {
-              return CueForm();
-            }),
-          )
-        },
-        )
-      ),
-      bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        color: Color(0xFFFF6B13D),
-        child: Container(height: 50.0),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      // floatingActionButton: Container(
+      //   // child: Icon(Icons.airline_seat_individual_suite_sharp),
+      //     width: 70.0,
+      //     height: 70.0,
+      //   child: FloatingActionButton(
+      //     tooltip: 'Increment',
+      //     shape: new CircleBorder(),
+      //     elevation: 0.0,
+      //     child: Icon(
+      //       Icons.add,
+      //       color: Colors.blue,
+      //     ),
+      //     onPressed: () => {
+      //       Navigator.push(
+      //         context,
+      //         MaterialPageRoute(builder: (context) {
+      //         return CueForm();
+      //       }),
+      //     )
+      //   },
+      //   )
+      // ),
+      // bottomNavigationBar: BottomAppBar(
+      //   shape: CircularNotchedRectangle(),
+      //   color: Color(0xFFFF6B13D),
+      //   child: Container(height: 50.0),
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
 }
