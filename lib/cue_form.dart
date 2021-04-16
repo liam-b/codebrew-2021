@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:path_provider/path_provider.dart';
 
 // final prefs = await SharedPreferences.getInstance();
@@ -16,6 +17,7 @@ enum EmotionalState {
   Monke
 }
 
+@JsonSerializable()
 class Cue {
   DateTime date;
   String place;
@@ -28,6 +30,9 @@ class Cue {
     final path = directory.path;
     final file = File('$path/counter.txt');
   }
+
+  // factory Cue.fromJson(Map<String, dynamic> json) => _$CueFromJson(json);
+  // Map<String, dynamic> toJson() => _$CueToJson(this);
 }
 
 class CueForm extends StatefulWidget {
@@ -61,15 +66,15 @@ class CueFormState extends State<CueForm> {
     activityField = _isFilled_Activity.text;
     peopleField = _isFilled_People.text;
     // Checking all TextFields.
-    if(peopleField == '' && placeField == '' && emotionalStateField == '')
+    if(timeField == '' || placeField == '')
     {
       // Put your code here which you want to execute when Text Field is Empty.
-      print('Text Field is empty, Please Fill All Data');
+      print('still some to fill');
  
     }else{
  
       // Put your code here, which you want to execute when Text Field is NOT Empty.
-      print('Not Empty, All Text Input is Filled.');
+      print('all filled');
     }
     
   }
@@ -102,7 +107,9 @@ class CueFormState extends State<CueForm> {
                         children: <Widget>[
                           Expanded(child: Text("Time",)),
                           Expanded(
-                            child: TextField(),
+                            child: TextField(
+                              controller: _isFilled_Time,
+                            ),
                           ),
                         ],
                       ),
@@ -110,31 +117,27 @@ class CueFormState extends State<CueForm> {
                   ),
                 ),
               ),
-              Visibility (
-                // placeField: _isFilled_Place,
-                child: Card(
-                  color: Colors.white70,
-                  child: Container(
-                    padding: EdgeInsets.all(10.0),
-                    child: Column(
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Expanded(child: Text("Place",)),
-                            Expanded(
-                              child: TextField(
-                              ),
+              //* Place
+              Card(
+                color: Colors.white70,
+                child: Container(
+                  padding: EdgeInsets.all(10.0),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Expanded(child: Text("Place",)),
+                          Expanded(
+                            child: TextField(
+                              controller: _isFilled_Place,
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),
-              //* Place
-              
-              
               //* Emotions
               Card(
                 color: Colors.white70,
@@ -147,6 +150,7 @@ class CueFormState extends State<CueForm> {
                           Expanded(child: Text("Emotional state",)),
                           Expanded(
                             child: TextField(
+                              controller: _isFilled_EmotionalState,
                             ),
                           ),
                         ],
@@ -168,6 +172,7 @@ class CueFormState extends State<CueForm> {
                           Expanded(child: Text("Last activity",)),
                           Expanded(
                             child: TextField(
+                              controller: _isFilled_Activity,
                             ),
                           ),
                         ],
@@ -189,6 +194,7 @@ class CueFormState extends State<CueForm> {
                           Expanded(child: Text("Who you were with",)),
                           Expanded(
                             child: TextField(
+                              controller: _isFilled_People,
                             ),
                           ),
                         ],
@@ -209,6 +215,7 @@ class CueFormState extends State<CueForm> {
                     //   // you'd often call a server or save the information in a database.
                     // }
                     // check if all fields are not empty
+                    checkTextFieldEmptyOrNot();
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Processing Data')));
                   },
                   child: Text('Submit'),
