@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter/foundation.dart';
 
 // final prefs = await SharedPreferences.getInstance();
 
@@ -25,10 +27,33 @@ class Cue {
   String activity;
   List<String> people;
 
+  Cue(this.date, this.place, this.emotionalState, this.activity, this.people);
+
+  Cue.fromJson(Map<String, dynamic> json) {
+    date = DateTime.parse(json['date']);
+    place = json['place'];
+    emotionalState = EmotionalState.values[json['emotion']];
+    activity = json['activity'];
+    people = json['people'].cast<String>();
+  }
+
   save() async {
     final directory = await getApplicationDocumentsDirectory();
     final path = directory.path;
-    final file = File('$path/counter.txt');
+    final file = File('$path/data.json');
+    final json = await file.readAsLines();
+    json.add(jsonEncode(toJson()));
+    // file.lines
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'date': date.toString(),
+      'place': place,
+      'emotion': emotionalState.index,
+      'activity': activity,
+      'people': people
+    };
   }
 
   // factory Cue.fromJson(Map<String, dynamic> json) => _$CueFromJson(json);
@@ -87,6 +112,13 @@ class CueFormState extends State<CueForm> {
 
   @override
   Widget build(BuildContext context) {
+    final test = Cue(DateTime.now(), "Location", EmotionalState.Monke, "Work", ["Josh", "Parsa"]);
+    final encoded = jsonEncode(test.toJson());
+    debugPrint(encoded);
+    final decoded = jsonDecode(encoded);
+    final deserialized = Cue.fromJson(decoded);
+    debugPrint(jsonEncode(deserialized.toJson()));
+
     // Build a Form widget using the _formKey created above.
     return Scaffold(
       body: Padding(
