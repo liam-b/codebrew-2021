@@ -1,65 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dropdownfield/dropdownfield.dart';
 import 'package:flutter/material.dart';
-import 'package:json_annotation/json_annotation.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:flutter/foundation.dart';
 
-// final prefs = await SharedPreferences.getInstance();
+import 'cue.dart';
 
-
-class Manager {
-
-}
-
-enum EmotionalState { 
-  Depressed,
-  Horny,
-  Monke
-}
-
-@JsonSerializable()
-class Cue {
-  DateTime date;
-  TimeOfDay time = TimeOfDay.now();
-  String place;
-  EmotionalState emotionalState;
-  String activity;
-  List<String> people;
-
-  Cue(this.date, this.place, this.emotionalState, this.activity, this.people);
-
-  Cue.fromJson(Map<String, dynamic> json) {
-    date = DateTime.parse(json['date']);
-    place = json['place'];
-    emotionalState = EmotionalState.values[json['emotion']];
-    activity = json['activity'];
-    people = json['people'].cast<String>();
-  }
-
-  save() async {
-    final directory = await getApplicationDocumentsDirectory();
-    final path = directory.path;
-    final file = File('$path/data.json');
-    final json = await file.readAsLines();
-    json.add(jsonEncode(toJson()));
-    // file.lines
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'date': date.toString(),
-      'place': place,
-      'emotion': emotionalState.index,
-      'activity': activity,
-      'people': people
-    };
-  }
-
-  // factory Cue.fromJson(Map<String, dynamic> json) => _$CueFromJson(json);
-  // Map<String, dynamic> toJson() => _$CueToJson(this);
-}
 
 class CueForm extends StatefulWidget {
 
@@ -128,6 +75,8 @@ class CueFormState extends State<CueForm> {
     final decoded = jsonDecode(encoded);
     final deserialized = Cue.fromJson(decoded);
     debugPrint(jsonEncode(deserialized.toJson()));
+
+    deserialized.save();
 
     // Build a Form widget using the _formKey created above.
     return Scaffold(
@@ -257,8 +206,19 @@ class CueFormState extends State<CueForm> {
                         children: <Widget>[
                           Expanded(child: Text("Who you were with",)),
                           Expanded(
-                            child: TextField(
-                              controller: _isFilled_People,
+                            // child: TextField(
+                            //   controller: _isFilled_People,
+                            // ),
+                            child: DropDownField(
+                              // value: "hi",
+                              // icon: Icon(Icons.map),
+                              required: true,
+                              // hintText: 'Choose a country',
+                              // labelText: 'Country',
+                              items: <String>["hi", "bye"],
+                              // setter: (dynamic newValue) {
+                              //   formData['Country'] = newValue;
+                              // }),
                             ),
                           ),
                         ],
