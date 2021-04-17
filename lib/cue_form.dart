@@ -15,9 +15,11 @@ class Manager {
 }
 
 enum EmotionalState { 
-  Depressed,
-  Horny,
-  Monke
+  BigSad,
+  DownBad,
+  Monke,
+  UpGlad,
+  BigMonke
 }
 
 @JsonSerializable()
@@ -88,6 +90,8 @@ class CueFormState extends State<CueForm> {
   final _isFilled_EmotionalState = TextEditingController();
   final _isFilled_Activity = TextEditingController();
   final _isFilled_People = TextEditingController();
+
+  int _value = 2;
 
   Cue currentCue = new Cue(DateTime.now(), "Location", EmotionalState.Monke, "Work", ["Josh", "Parsa"]);
 
@@ -221,42 +225,55 @@ class CueFormState extends State<CueForm> {
                         children: <Widget>[
                           Expanded(child: Text("Emotional state",)),
                           Expanded(
-                            child: RatingBar.builder(
-                              initialRating: 3,
-                              itemCount: 5,
-                              itemBuilder: (context, index) {
-                                switch (index) {
-                                    case 0:
-                                      return Icon(
-                                          Icons.sentiment_very_dissatisfied,
-                                          color: Colors.red,
-                                      );
-                                    case 1:
-                                      return Icon(
-                                          Icons.sentiment_dissatisfied,
-                                          color: Colors.redAccent,
-                                      );
-                                    case 2:
-                                      return Icon(
-                                          Icons.sentiment_neutral,
-                                          color: Colors.amber,
-                                      );
-                                    case 3:
-                                      return Icon(
-                                          Icons.sentiment_satisfied,
-                                          color: Colors.lightGreen,
-                                      );
-                                    case 4:
-                                        return Icon(
-                                          Icons.sentiment_very_satisfied,
-                                          color: Colors.green,
-                                        );
-                                }
-                              },
-                              onRatingUpdate: (rating) {
-                                print(rating);
-                              },
-                            ),
+                            child: Center(
+                              child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+                                GestureDetector(
+                                  onTap: () => setState(() => currentCue.emotionalState = EmotionalState.BigSad),
+                                  child: Container(
+                                    height: 56,
+                                    width: 40,
+                                    color: Colors.transparent,
+                                    child: Icon(Icons.sentiment_very_dissatisfied, color: currentCue.emotionalState == EmotionalState.BigSad ? Colors.red : Colors.black, size: 40,),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () => setState(() => currentCue.emotionalState = EmotionalState.DownBad),
+                                  child: Container(
+                                    height: 56,
+                                    width: 40,
+                                    color: Colors.transparent,
+                                    child: Icon(Icons.sentiment_dissatisfied, color: currentCue.emotionalState == EmotionalState.DownBad ? Colors.redAccent : Colors.black, size: 40,),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () => setState(() => currentCue.emotionalState = EmotionalState.Monke),
+                                  child: Container(
+                                    height: 56,
+                                    width: 40,
+                                    color: Colors.transparent,
+                                    child: Icon(Icons.sentiment_neutral, color: currentCue.emotionalState == EmotionalState.Monke ? Colors.purple : Colors.black, size: 40,),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () => setState(() => currentCue.emotionalState = EmotionalState.UpGlad),
+                                  child: Container(
+                                    height: 56,
+                                    width: 40,
+                                    color: Colors.transparent,
+                                    child: Icon(Icons.sentiment_satisfied, color: currentCue.emotionalState == EmotionalState.UpGlad ? Colors.greenAccent : Colors.black, size: 40,),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () => setState(() => currentCue.emotionalState = EmotionalState.BigMonke),
+                                  child: Container(
+                                    height: 56,
+                                    width: 40,
+                                    color: Colors.transparent,
+                                    child: Icon(Icons.sentiment_very_satisfied, color: currentCue.emotionalState == EmotionalState.BigMonke ? Colors.green : Colors.black, size: 40,),
+                                  ),
+                                ),
+                              ],),
+                            )
                           ),
                         ],
                       ),

@@ -89,6 +89,17 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             children: [
               for (var i in habits) HabitButton(i),
+              TextButton(
+                style: ButtonStyle(
+                  // backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                  foregroundColor: MaterialStateProperty.all(Colors.black),
+                ),
+                onPressed: () => {},
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Text('+', style: TextStyle(fontSize: 20)),
+                )
+              ),
               Spacer(),
               SizedBox(
                 child: CircularProgressIndicator(
