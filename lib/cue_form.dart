@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:location/location.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 // final prefs = await SharedPreferences.getInstance();
 
@@ -26,6 +26,8 @@ class Cue {
   EmotionalState emotionalState;
   String activity;
   List<String> people;
+
+  String instead;
 
   save() async {
     final directory = await getApplicationDocumentsDirectory();
@@ -100,6 +102,11 @@ class CueFormState extends State<CueForm> {
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
     return Scaffold(
+      appBar: AppBar(actions: [
+        Spacer(),
+        Center(child: Text('I feel like ' + cueName, style: TextStyle(fontSize: 20),),),
+        Spacer()
+      ],),
       body: Padding(
         padding: EdgeInsets.all(30),
         child: Form(
@@ -107,13 +114,13 @@ class CueFormState extends State<CueForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Center(
-                child: Text(cueName, style: TextStyle(fontSize: 25),)
-              ),
+              // Center(
+              //   child: Text(cueName, style: TextStyle(fontSize: 25),)
+              // ),
 
               //* Time
               Card(
-                color: Colors.white70,
+                color: Colors.white,
                 child: Container(
                   padding: EdgeInsets.all(10.0),
                   child: Column(
@@ -152,7 +159,7 @@ class CueFormState extends State<CueForm> {
               ),
               //* Place
               Card(
-                color: Colors.white70,
+                color: Colors.white,
                 child: Container(
                   padding: EdgeInsets.all(10.0),
                   child: Column(
@@ -173,7 +180,7 @@ class CueFormState extends State<CueForm> {
               ),
               //* Emotions
               Card(
-                color: Colors.white70,
+                color: Colors.white,
                 child: Container(
                   padding: EdgeInsets.all(10.0),
                   child: Column(
@@ -182,8 +189,41 @@ class CueFormState extends State<CueForm> {
                         children: <Widget>[
                           Expanded(child: Text("Emotional state",)),
                           Expanded(
-                            child: TextField(
-                              controller: _isFilled_EmotionalState,
+                            child: RatingBar.builder(
+                              initialRating: 3,
+                              itemCount: 5,
+                              itemBuilder: (context, index) {
+                                switch (index) {
+                                    case 0:
+                                      return Icon(
+                                          Icons.sentiment_very_dissatisfied,
+                                          color: Colors.red,
+                                      );
+                                    case 1:
+                                      return Icon(
+                                          Icons.sentiment_dissatisfied,
+                                          color: Colors.redAccent,
+                                      );
+                                    case 2:
+                                      return Icon(
+                                          Icons.sentiment_neutral,
+                                          color: Colors.amber,
+                                      );
+                                    case 3:
+                                      return Icon(
+                                          Icons.sentiment_satisfied,
+                                          color: Colors.lightGreen,
+                                      );
+                                    case 4:
+                                        return Icon(
+                                          Icons.sentiment_very_satisfied,
+                                          color: Colors.green,
+                                        );
+                                }
+                              },
+                              onRatingUpdate: (rating) {
+                                print(rating);
+                              },
                             ),
                           ),
                         ],
@@ -195,7 +235,7 @@ class CueFormState extends State<CueForm> {
               
               //* Activity
               Card(
-                color: Colors.white70,
+                color: Colors.white,
                 child: Container(
                   padding: EdgeInsets.all(10.0),
                   child: Column(
@@ -217,7 +257,7 @@ class CueFormState extends State<CueForm> {
               
               //* People
               Card(
-                color: Colors.white70,
+                color: Colors.white,
                 child: Container(
                   padding: EdgeInsets.all(10.0),
                   child: Column(
@@ -239,20 +279,25 @@ class CueFormState extends State<CueForm> {
 
               //* Submit button
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 16.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Validate returns true if the form is valid, or false otherwise.
-                    // if (_formKey.currentState.validate()) {
-                    //   // If the form is valid, display a snackbar. In the real world,
-                    //   // you'd often call a server or save the information in a database.
-                    // }
-                    // check if all fields are not empty
-                    checkTextFieldEmptyOrNot();
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Processing Data')));
-                  },
-                  child: Text('Submit'),
-                ),
+                padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 4),
+                child: Row(
+                  children: [
+                    Spacer(),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Validate returns true if the form is valid, or false otherwise.
+                        // if (_formKey.currentState.validate()) {
+                        //   // If the form is valid, display a snackbar. In the real world,
+                        //   // you'd often call a server or save the information in a database.
+                        // }
+                        // check if all fields are not empty
+                        checkTextFieldEmptyOrNot();
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Processing Data')));
+                      },
+                      child: Text('Submit'),
+                    ),
+                  ]
+                )
               ),
             ],
           ),
