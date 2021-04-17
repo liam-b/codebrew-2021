@@ -1,11 +1,8 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:dropdownfield/dropdownfield.dart';
 import 'package:flutter/material.dart';
 
-import 'package:json_annotation/json_annotation.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter/foundation.dart';
 
@@ -73,15 +70,6 @@ class CueFormState extends State<CueForm> {
 
   @override
   Widget build(BuildContext context) {
-    final test = Cue(DateTime.now(), "Location", EmotionalState.Monke, "Work", ["Josh", "Parsa"]);
-    final encoded = jsonEncode(test.toJson());
-    debugPrint(encoded);
-    final decoded = jsonDecode(encoded);
-    final deserialized = Cue.fromJson(decoded);
-    debugPrint(jsonEncode(deserialized.toJson()));
-
-    deserialized.save();
-
     // Build a Form widget using the _formKey created above.
     return Scaffold(
       appBar: AppBar(actions: [
@@ -251,17 +239,27 @@ class CueFormState extends State<CueForm> {
                             // child: TextField(
                             //   controller: _isFilled_People,
                             // ),
-                            child: DropDownField(
-                              // value: "hi",
-                              // icon: Icon(Icons.map),
-                              required: true,
-                              // hintText: 'Choose a country',
-                              // labelText: 'Country',
-                              items: <String>["hi", "bye"],
-                              // setter: (dynamic newValue) {
-                              //   formData['Country'] = newValue;
-                              // }),
-                            ),
+                            // child: DropDownField(
+                            //   // value: "hi",
+                            //   // icon: Icon(Icons.map),
+                            //   required: false,
+                            //   strict: false,
+                            //   // hintText: 'Choose a country',
+                            //   // labelText: 'Country',
+                            //   items: <String>["hi", "bye"],
+                            //   // setter: (dynamic newValue) {
+                            //   //   formData['Country'] = newValue;
+                            //   // }),
+                            // ),
+                            child: DropdownButton<String>(
+                              items: <String>['A', 'B', 'C', 'D'].map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              // onChanged: (_) {},
+                            )
                           ),
                         ],
                       ),
