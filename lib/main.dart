@@ -13,8 +13,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Pi in Disguise',
       theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white,
-        primarySwatch: Colors.grey
+        scaffoldBackgroundColor: Colors.blueGrey[50],
+        primarySwatch: Colors.red
       ),
       home: MyHomePage(title: 'Pie In Disguise'),
     );
@@ -43,8 +43,8 @@ class HabitButton extends StatelessWidget {
         width: double.infinity,
         child: ElevatedButton(
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.white70),
-            foregroundColor: MaterialStateProperty.all(Colors.black54),
+            backgroundColor: MaterialStateProperty.all(Colors.white),
+            foregroundColor: MaterialStateProperty.all(Colors.black),
           ),
           onPressed: () => {
             Navigator.push(
@@ -55,8 +55,8 @@ class HabitButton extends StatelessWidget {
             )
           },
           child: Padding(
-            padding: EdgeInsets.all(5),
-            child: Text(habitName, style: TextStyle(fontSize: 25)),
+            padding: EdgeInsets.all(10),
+            child: Text(habitName, style: TextStyle(fontSize: 20)),
           )
         )
       )
@@ -66,65 +66,62 @@ class HabitButton extends StatelessWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
   final habits = ['Smoking', 'Coffee', 'Diareha'];
 
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  void getHabitButtons() {
+    int x = 0;
+    for (int i; i < habits.length; i+=2) {
+      HabitButton(i.toString());
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(actions: [
+        Spacer(),
+        Center(child: Text('Habit Tracker', style: TextStyle(fontSize: 20),),),
+        Spacer(),
+      ],),
       body: Padding(
         padding: EdgeInsets.all(30),
         child: Center(
           child: Column(
             children: [
-              // ElevatedButton(
-              //   onPressed: () {
-              //       // Respond to button press
-              //   },
-              //   child: Text("I FEEL LIKE SMOKING", style: TextStyle(fontSize: 25)),
-              // ),
-              // SizedBox(height: 10),
-              for ( var i in habits) HabitButton(i.toString())
+              for (var i in habits) HabitButton(i),
+              Spacer(),
+              SizedBox(
+                child: CircularProgressIndicator(
+                  backgroundColor: Colors.white,
+                  strokeWidth: 50,
+                  value: 0.3,
+                ),
+                height: 250,
+                width: 250,
+              ),
+              Spacer(),
             ],
           )
         ),
       ),
-      // floatingActionButton: Container(
-      //   // child: Icon(Icons.airline_seat_individual_suite_sharp),
-      //     width: 70.0,
-      //     height: 70.0,
-      //   child: FloatingActionButton(
-      //     tooltip: 'Increment',
-      //     shape: new CircleBorder(),
-      //     elevation: 0.0,
-      //     child: Icon(
-      //       Icons.add,
-      //       color: Colors.blue,
-      //     ),
-      //     onPressed: () => {
-      //       Navigator.push(
-      //         context,
-      //         MaterialPageRoute(builder: (context) {
-      //         return CueForm();
-      //       }),
-      //     )
-      //   },
-      //   )
-      // ),
-      // bottomNavigationBar: BottomAppBar(
-      //   shape: CircularNotchedRectangle(),
-      //   color: Color(0xFFFF6B13D),
-      //   child: Container(height: 50.0),
-      // ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      bottomNavigationBar: BottomNavigationBar(
+       currentIndex: 0, // this will be set when a new tab is tapped
+       items: [
+         BottomNavigationBarItem(
+           icon: new Icon(Icons.home),
+           label: 'Home',
+         ),
+         BottomNavigationBarItem(
+           icon: new Icon(Icons.accessibility_sharp),
+           label: 'Progress',
+         ),
+         BottomNavigationBarItem(
+           icon: Icon(Icons.person),
+           label: 'Profile'
+         )
+       ],
+     ),
+
     );
   }
 }
