@@ -1,3 +1,4 @@
+import 'package:codebrew_2021/homeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -68,6 +69,14 @@ class HabitButton extends StatelessWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final habits = ['Smoking', 'Coffee', 'Diareha'];
 
+  final _screens = [
+    HomeScreen(),
+    Text('data'),
+    Center(child: Icon(Icons.ac_unit))
+  ];
+
+  var _screenIndex = 0;
+
   void getHabitButtons() {
     int x = 0;
     for (int i; i < habits.length; i+=2) {
@@ -83,40 +92,9 @@ class _MyHomePageState extends State<MyHomePage> {
         Center(child: Text('Habit Tracker', style: TextStyle(fontSize: 20),),),
         Spacer(),
       ],),
-      body: Padding(
-        padding: EdgeInsets.all(30),
-        child: Center(
-          child: Column(
-            children: [
-              for (var i in habits) HabitButton(i),
-              TextButton(
-                style: ButtonStyle(
-                  // backgroundColor: MaterialStateProperty.all(Colors.transparent),
-                  foregroundColor: MaterialStateProperty.all(Colors.black),
-                ),
-                onPressed: () => {},
-                child: Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Text('+', style: TextStyle(fontSize: 20)),
-                )
-              ),
-              Spacer(),
-              SizedBox(
-                child: CircularProgressIndicator(
-                  backgroundColor: Colors.white,
-                  strokeWidth: 50,
-                  value: 0.3,
-                ),
-                height: 250,
-                width: 250,
-              ),
-              Spacer(),
-            ],
-          )
-        ),
-      ),
+      body: _screens[_screenIndex],
       bottomNavigationBar: BottomNavigationBar(
-       currentIndex: 0, // this will be set when a new tab is tapped
+       currentIndex: _screenIndex, // this will be set when a new tab is tapped
        items: [
          BottomNavigationBarItem(
            icon: new Icon(Icons.home),
@@ -130,7 +108,12 @@ class _MyHomePageState extends State<MyHomePage> {
            icon: Icon(Icons.person),
            label: 'Profile'
          )
-       ],
+        ],
+        onTap: (index){
+          setState(() {
+            _screenIndex = index;
+          });
+        },
      ),
 
     );
